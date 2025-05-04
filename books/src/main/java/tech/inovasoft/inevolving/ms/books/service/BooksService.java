@@ -15,13 +15,15 @@ public class BooksService {
     @Autowired
     private BooksRepository repository;
 
-
     public Book addBook(UUID idUser, RequestBookDTO dto) throws NotSavedDTOInDbException {
         try {
             return repository.save(new Book(idUser, dto));
         } catch (Exception e) {
-            //TODO falta teste
             throw new NotSavedDTOInDbException();
         }
+    }
+
+    public Book updateBook(UUID idUser, UUID idBook, RequestBookDTO dto) {
+        return new Book();
     }
 }

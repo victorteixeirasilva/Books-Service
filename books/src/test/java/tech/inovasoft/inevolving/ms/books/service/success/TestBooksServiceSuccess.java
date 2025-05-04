@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 
+import java.util.Optional;
 import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
@@ -75,6 +76,58 @@ public class TestBooksServiceSuccess {
         assertEquals(expectedBook.getIdUser(), resultBook.getIdUser());
 
         verify(repository, times(1)).save(any(Book.class));
+    }
+
+    @Test
+    public void updateBook() {
+
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var dto = new RequestBookDTO(
+                "title2",
+                "Author2",
+                "Theme2",
+                "CoverImage2"
+        );
+
+        var expectedBook = new Book(
+                UUID.randomUUID(),
+                dto.title(),
+                dto.author(),
+                dto.theme(),
+                Status.TO_DO,
+                dto.coverImage(),
+                idUser
+        );
+
+        var oldBook = new Book(
+                expectedBook.getId(),
+                "title",
+                "Author",
+                "Theme",
+                Status.TO_DO,
+                "cover image",
+                idUser
+        );
+
+        // When (Quando)
+        when(repository.save(any(Book.class))).thenReturn(expectedBook);
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(oldBook));
+        var resultBook = service.updateBook(idUser, expectedBook.getId(), dto);
+
+        // Then (Então)
+        assertNotNull(resultBook);
+        assertEquals(expectedBook.getId(), resultBook.getId());
+        assertEquals(dto.title(), resultBook.getTitle());
+        assertEquals(dto.author(), resultBook.getAuthor());
+        assertEquals(dto.theme(), resultBook.getTheme());
+        assertEquals(expectedBook.getStatus(), resultBook.getStatus());
+        assertEquals(dto.coverImage(), resultBook.getCoverImage());
+        assertEquals(expectedBook.getIdUser(), resultBook.getIdUser());
+
+        verify(repository, times(1)).save(any(Book.class));
+        verify(repository, times(1)).findById(any(UUID.class));
     }
 
 }

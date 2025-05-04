@@ -25,6 +25,22 @@ public class BooksController {
     @Async("asyncExecutor")
     @PostMapping("/{idUser}")
     public CompletableFuture<ResponseEntity> addBook(@PathVariable UUID idUser, @RequestBody RequestBookDTO dto) throws NotSavedDTOInDbException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(service.addBook(idUser, dto)));
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        service.addBook(idUser, dto)
+                )
+        );
     }
+
+    @Operation(summary = "Editar Livro.", description = "Retorna o Livro editado.")
+    @Async("asyncExecutor")
+    @PostMapping("/{idUser}/{idBook}")
+    public CompletableFuture<ResponseEntity> updateBook(@PathVariable UUID idUser, @PathVariable UUID idBook, @RequestBody RequestBookDTO dto) {
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        service.updateBook(idUser, idBook, dto)
+                )
+        );
+    }
+
 }
