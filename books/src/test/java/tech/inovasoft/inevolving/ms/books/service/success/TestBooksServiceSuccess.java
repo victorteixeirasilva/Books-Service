@@ -80,7 +80,6 @@ public class TestBooksServiceSuccess {
 
     @Test
     public void updateBook() {
-
         // Given (Dado)
         var idUser = UUID.randomUUID();
 

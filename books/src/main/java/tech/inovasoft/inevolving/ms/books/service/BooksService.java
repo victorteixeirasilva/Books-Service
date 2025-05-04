@@ -7,6 +7,7 @@ import tech.inovasoft.inevolving.ms.books.domain.exception.NotSavedDTOInDbExcept
 import tech.inovasoft.inevolving.ms.books.domain.model.Book;
 import tech.inovasoft.inevolving.ms.books.repository.BooksRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -24,6 +25,37 @@ public class BooksService {
     }
 
     public Book updateBook(UUID idUser, UUID idBook, RequestBookDTO dto) {
-        return new Book();
+        Optional<Book> optOldBook = Optional.empty();
+        try {
+            optOldBook = repository.findById(idBook);
+        } catch (Exception e) {
+            // TODO erro de integração com DB.
+            return null;
+        }
+
+        if (optOldBook.isEmpty()){
+            // TODO erro de livro não encontrado.
+        }
+
+        if (!optOldBook.get().getIdUser().equals(idUser)){
+            // TODO erro de autorização do usuário sobre o livro
+        }
+
+        var newBook = new Book(
+                optOldBook.get().getId(),
+                dto.title(),
+                dto.author(),
+                dto.theme(),
+                optOldBook.get().getStatus(),
+                dto.coverImage(),
+                idUser
+        );
+
+        try {
+            return repository.save(newBook);
+        } catch (Exception e) {
+            // TODO erro de integração com DB.
+            return null;
+        }
     }
 }
