@@ -127,7 +127,36 @@ public class BooksService {
         }
     }
 
-    public Book updateBookStatusCompleted(UUID idUser, UUID idBook) {
-        return null;
+    public Book updateBookStatusCompleted(UUID idUser, UUID idBook) throws DataBaseException, BookNotFoundException, UnauthorizedUserAboutBookException {
+        Optional<Book> optOldBook = Optional.empty();
+        try {
+            optOldBook = repository.findById(idBook);
+        } catch (Exception e) {
+            throw new DataBaseException("(findById)");
+        }
+
+        if (optOldBook.isEmpty()){
+            throw new BookNotFoundException();
+        }
+
+        if (!optOldBook.get().getIdUser().equals(idUser)){
+            throw new UnauthorizedUserAboutBookException();
+        }
+
+        var newBook = new Book(
+                optOldBook.get().getId(),
+                optOldBook.get().getTitle(),
+                optOldBook.get().getAuthor(),
+                optOldBook.get().getTheme(),
+                Status.COMPLETED,
+                optOldBook.get().getCoverImage(),
+                idUser
+        );
+
+        try {
+            return repository.save(newBook);
+        } catch (Exception e) {
+            throw new DataBaseException("(save)");
+        }
     }
 }
