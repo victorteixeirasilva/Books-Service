@@ -94,4 +94,8 @@ public class BooksService {
             throw new DataBaseException("(save)");
         }
     }
+
+    public Book updateBookStatusInProgress(UUID idUser, UUID idBook) {
+        return new Book();
+    }
 }
