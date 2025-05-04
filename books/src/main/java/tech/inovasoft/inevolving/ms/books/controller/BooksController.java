@@ -10,7 +10,7 @@ import tech.inovasoft.inevolving.ms.books.domain.dto.request.RequestBookDTO;
 import tech.inovasoft.inevolving.ms.books.domain.exception.BookNotFoundException;
 import tech.inovasoft.inevolving.ms.books.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.books.domain.exception.NotSavedDTOInDbException;
-import tech.inovasoft.inevolving.ms.books.domain.exception.UnauthorizedUserAboutBook;
+import tech.inovasoft.inevolving.ms.books.domain.exception.UnauthorizedUserAboutBookException;
 import tech.inovasoft.inevolving.ms.books.service.BooksService;
 
 import java.util.UUID;
@@ -38,7 +38,7 @@ public class BooksController {
     @Operation(summary = "Editar Livro.", description = "Retorna o Livro editado.")
     @Async("asyncExecutor")
     @PostMapping("/{idUser}/{idBook}")
-    public CompletableFuture<ResponseEntity> updateBook(@PathVariable UUID idUser, @PathVariable UUID idBook, @RequestBody RequestBookDTO dto) throws UnauthorizedUserAboutBook, BookNotFoundException, DataBaseException {
+    public CompletableFuture<ResponseEntity> updateBook(@PathVariable UUID idUser, @PathVariable UUID idBook, @RequestBody RequestBookDTO dto) throws UnauthorizedUserAboutBookException, BookNotFoundException, DataBaseException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
                         service.updateBook(idUser, idBook, dto)

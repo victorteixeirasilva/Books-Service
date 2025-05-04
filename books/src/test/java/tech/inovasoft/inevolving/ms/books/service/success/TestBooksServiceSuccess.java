@@ -9,7 +9,7 @@ import tech.inovasoft.inevolving.ms.books.domain.dto.request.RequestBookDTO;
 import tech.inovasoft.inevolving.ms.books.domain.exception.BookNotFoundException;
 import tech.inovasoft.inevolving.ms.books.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.books.domain.exception.NotSavedDTOInDbException;
-import tech.inovasoft.inevolving.ms.books.domain.exception.UnauthorizedUserAboutBook;
+import tech.inovasoft.inevolving.ms.books.domain.exception.UnauthorizedUserAboutBookException;
 import tech.inovasoft.inevolving.ms.books.domain.model.Book;
 import tech.inovasoft.inevolving.ms.books.domain.model.Status;
 import tech.inovasoft.inevolving.ms.books.repository.BooksRepository;
@@ -82,7 +82,7 @@ public class TestBooksServiceSuccess {
     }
 
     @Test
-    public void updateBook() throws UnauthorizedUserAboutBook, BookNotFoundException, DataBaseException {
+    public void updateBook() throws UnauthorizedUserAboutBookException, BookNotFoundException, DataBaseException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
 

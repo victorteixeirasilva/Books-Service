@@ -6,6 +6,6 @@ public class DataBaseException extends Exception{
     }
 
     public DataBaseException(String message) {
-        super(message);
+        super("Error in integration with Database " + message);
     }
 }
