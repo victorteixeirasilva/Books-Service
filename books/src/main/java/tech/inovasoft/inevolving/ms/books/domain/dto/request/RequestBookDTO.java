@@ -4,6 +4,7 @@ public record RequestBookDTO(
         String title,
         String author,
         String theme,
-        String coverImage)
+        String coverImage
+)
 {
 }
