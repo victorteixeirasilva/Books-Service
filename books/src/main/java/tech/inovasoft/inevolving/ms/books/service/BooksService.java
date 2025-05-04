@@ -3,7 +3,10 @@ package tech.inovasoft.inevolving.ms.books.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.inovasoft.inevolving.ms.books.domain.dto.request.RequestBookDTO;
+import tech.inovasoft.inevolving.ms.books.domain.exception.BookNotFoundException;
+import tech.inovasoft.inevolving.ms.books.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.books.domain.exception.NotSavedDTOInDbException;
+import tech.inovasoft.inevolving.ms.books.domain.exception.UnauthorizedUserAboutBook;
 import tech.inovasoft.inevolving.ms.books.domain.model.Book;
 import tech.inovasoft.inevolving.ms.books.repository.BooksRepository;
 
@@ -24,21 +27,20 @@ public class BooksService {
         }
     }
 
-    public Book updateBook(UUID idUser, UUID idBook, RequestBookDTO dto) {
+    public Book updateBook(UUID idUser, UUID idBook, RequestBookDTO dto) throws DataBaseException, BookNotFoundException, UnauthorizedUserAboutBook {
         Optional<Book> optOldBook = Optional.empty();
         try {
             optOldBook = repository.findById(idBook);
         } catch (Exception e) {
-            // TODO erro de integração com DB.
-            return null;
+            throw new DataBaseException();
         }
 
         if (optOldBook.isEmpty()){
-            // TODO erro de livro não encontrado.
+            throw new BookNotFoundException();
         }
 
         if (!optOldBook.get().getIdUser().equals(idUser)){
-            // TODO erro de autorização do usuário sobre o livro
+            throw new UnauthorizedUserAboutBook();
         }
 
         var newBook = new Book(
@@ -54,8 +56,9 @@ public class BooksService {
         try {
             return repository.save(newBook);
         } catch (Exception e) {
-            // TODO erro de integração com DB.
-            return null;
+            throw new DataBaseException();
         }
     }
+
+
 }

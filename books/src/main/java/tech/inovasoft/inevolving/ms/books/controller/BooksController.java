@@ -7,7 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import tech.inovasoft.inevolving.ms.books.domain.dto.request.RequestBookDTO;
+import tech.inovasoft.inevolving.ms.books.domain.exception.BookNotFoundException;
+import tech.inovasoft.inevolving.ms.books.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.books.domain.exception.NotSavedDTOInDbException;
+import tech.inovasoft.inevolving.ms.books.domain.exception.UnauthorizedUserAboutBook;
 import tech.inovasoft.inevolving.ms.books.service.BooksService;
 
 import java.util.UUID;
@@ -35,7 +38,7 @@ public class BooksController {
     @Operation(summary = "Editar Livro.", description = "Retorna o Livro editado.")
     @Async("asyncExecutor")
     @PostMapping("/{idUser}/{idBook}")
-    public CompletableFuture<ResponseEntity> updateBook(@PathVariable UUID idUser, @PathVariable UUID idBook, @RequestBody RequestBookDTO dto) {
+    public CompletableFuture<ResponseEntity> updateBook(@PathVariable UUID idUser, @PathVariable UUID idBook, @RequestBody RequestBookDTO dto) throws UnauthorizedUserAboutBook, BookNotFoundException, DataBaseException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
                         service.updateBook(idUser, idBook, dto)
