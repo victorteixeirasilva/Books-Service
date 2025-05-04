@@ -68,4 +68,14 @@ public class BooksController {
         );
     }
 
+    @Operation(summary = "Mudar o Status para COMPLETED", description = "Retorna o Livro editado.")
+    @Async("asyncExecutor")
+    @PatchMapping("/status/inprogress/{idUser}/{idBook}")
+    public CompletableFuture<ResponseEntity> updateBookStatusCompleted(@PathVariable UUID idUser, @PathVariable UUID idBook) throws BookNotFoundException, DataBaseException, UnauthorizedUserAboutBookException {
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        service.updateBookStatusCompleted(idUser, idBook)
+                )
+        );
+    }
 }

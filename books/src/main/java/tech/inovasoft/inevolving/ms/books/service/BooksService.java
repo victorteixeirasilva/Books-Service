@@ -61,7 +61,6 @@ public class BooksService {
         }
     }
 
-
     public Book updateBookStatusToDo(UUID idUser, UUID idBook) throws DataBaseException, BookNotFoundException, UnauthorizedUserAboutBookException {
         Optional<Book> optOldBook = Optional.empty();
         try {
@@ -95,7 +94,36 @@ public class BooksService {
         }
     }
 
-    public Book updateBookStatusInProgress(UUID idUser, UUID idBook) {
-        return new Book();
+    public Book updateBookStatusInProgress(UUID idUser, UUID idBook) throws DataBaseException, BookNotFoundException, UnauthorizedUserAboutBookException {
+        Optional<Book> optOldBook = Optional.empty();
+        try {
+            optOldBook = repository.findById(idBook);
+        } catch (Exception e) {
+            throw new DataBaseException("(findById)");
+        }
+
+        if (optOldBook.isEmpty()){
+            throw new BookNotFoundException();
+        }
+
+        if (!optOldBook.get().getIdUser().equals(idUser)){
+            throw new UnauthorizedUserAboutBookException();
+        }
+
+        var newBook = new Book(
+                optOldBook.get().getId(),
+                optOldBook.get().getTitle(),
+                optOldBook.get().getAuthor(),
+                optOldBook.get().getTheme(),
+                Status.IN_PROGRESS,
+                optOldBook.get().getCoverImage(),
+                idUser
+        );
+
+        try {
+            return repository.save(newBook);
+        } catch (Exception e) {
+            throw new DataBaseException("(save)");
+        }
     }
 }
