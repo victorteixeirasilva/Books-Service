@@ -126,4 +126,8 @@ public class BooksService {
             throw new DataBaseException("(save)");
         }
     }
+
+    public Book updateBookStatusCompleted(UUID idUser, UUID idBook) {
+        return null;
+    }
 }
