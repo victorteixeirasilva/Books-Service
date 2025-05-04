@@ -132,4 +132,48 @@ public class TestBooksServiceSuccess {
         verify(repository, times(1)).findById(any(UUID.class));
     }
 
+    @Test
+    public void updateBookStatusToDo() throws UnauthorizedUserAboutBookException, BookNotFoundException, DataBaseException {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var expectedBook = new Book(
+                UUID.randomUUID(),
+                "title",
+                "Author",
+                "Theme",
+                Status.TO_DO,
+                "cover image",
+                idUser
+        );
+
+        var oldBook = new Book(
+                expectedBook.getId(),
+                "title",
+                "Author",
+                "Theme",
+                Status.COMPLETED,
+                "cover image",
+                idUser
+        );
+
+        // When (Quando)
+        when(repository.save(any(Book.class))).thenReturn(expectedBook);
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(oldBook));
+        var resultBook = service.updateBookStatusToDo(idUser, expectedBook.getId());
+
+        // Then (Então)
+        assertNotNull(resultBook);
+        assertEquals(expectedBook.getId(), resultBook.getId());
+        assertEquals(expectedBook.getTitle(), resultBook.getTitle());
+        assertEquals(expectedBook.getAuthor(), resultBook.getAuthor());
+        assertEquals(expectedBook.getTheme(), resultBook.getTheme());
+        assertEquals(Status.TO_DO, resultBook.getStatus());
+        assertEquals(expectedBook.getCoverImage(), resultBook.getCoverImage());
+        assertEquals(expectedBook.getIdUser(), resultBook.getIdUser());
+
+        verify(repository, times(1)).save(any(Book.class));
+        verify(repository, times(1)).findById(any(UUID.class));
+    }
+
 }

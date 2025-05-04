@@ -37,11 +37,22 @@ public class BooksController {
 
     @Operation(summary = "Editar Livro.", description = "Retorna o Livro editado.")
     @Async("asyncExecutor")
-    @PostMapping("/{idUser}/{idBook}")
+    @PatchMapping("/{idUser}/{idBook}")
     public CompletableFuture<ResponseEntity> updateBook(@PathVariable UUID idUser, @PathVariable UUID idBook, @RequestBody RequestBookDTO dto) throws UnauthorizedUserAboutBookException, BookNotFoundException, DataBaseException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
                         service.updateBook(idUser, idBook, dto)
+                )
+        );
+    }
+
+    @Operation(summary = "Mudar o Status para TODO", description = "Retorna o Livro editado.")
+    @Async("asyncExecutor")
+    @PatchMapping("/{idUser}/{idBook}")
+    public CompletableFuture<ResponseEntity> updateBookStatusToDo(@PathVariable UUID idUser, @PathVariable UUID idBook) {
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        service.updateBookStatusToDo(idUser, idBook)
                 )
         );
     }

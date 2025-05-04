@@ -61,4 +61,7 @@ public class BooksService {
     }
 
 
+    public Book updateBookStatusToDo(UUID idUser, UUID idBook) {
+        return new Book();
+    }
 }
