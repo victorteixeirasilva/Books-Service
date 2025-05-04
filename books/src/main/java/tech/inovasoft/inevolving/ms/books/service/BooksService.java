@@ -8,6 +8,7 @@ import tech.inovasoft.inevolving.ms.books.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.books.domain.exception.NotSavedDTOInDbException;
 import tech.inovasoft.inevolving.ms.books.domain.exception.UnauthorizedUserAboutBookException;
 import tech.inovasoft.inevolving.ms.books.domain.model.Book;
+import tech.inovasoft.inevolving.ms.books.domain.model.Status;
 import tech.inovasoft.inevolving.ms.books.repository.BooksRepository;
 
 import java.util.Optional;
@@ -61,7 +62,36 @@ public class BooksService {
     }
 
 
-    public Book updateBookStatusToDo(UUID idUser, UUID idBook) {
-        return new Book();
+    public Book updateBookStatusToDo(UUID idUser, UUID idBook) throws DataBaseException, BookNotFoundException, UnauthorizedUserAboutBookException {
+        Optional<Book> optOldBook = Optional.empty();
+        try {
+            optOldBook = repository.findById(idBook);
+        } catch (Exception e) {
+            throw new DataBaseException("(findById)");
+        }
+
+        if (optOldBook.isEmpty()){
+            throw new BookNotFoundException();
+        }
+
+        if (!optOldBook.get().getIdUser().equals(idUser)){
+            throw new UnauthorizedUserAboutBookException();
+        }
+
+        var newBook = new Book(
+                optOldBook.get().getId(),
+                optOldBook.get().getTitle(),
+                optOldBook.get().getAuthor(),
+                optOldBook.get().getTheme(),
+                Status.TO_DO,
+                optOldBook.get().getCoverImage(),
+                idUser
+        );
+
+        try {
+            return repository.save(newBook);
+        } catch (Exception e) {
+            throw new DataBaseException("(save)");
+        }
     }
 }

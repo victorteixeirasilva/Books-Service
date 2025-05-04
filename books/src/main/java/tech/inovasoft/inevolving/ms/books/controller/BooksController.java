@@ -48,8 +48,8 @@ public class BooksController {
 
     @Operation(summary = "Mudar o Status para TODO", description = "Retorna o Livro editado.")
     @Async("asyncExecutor")
-    @PatchMapping("/{idUser}/{idBook}")
-    public CompletableFuture<ResponseEntity> updateBookStatusToDo(@PathVariable UUID idUser, @PathVariable UUID idBook) {
+    @PatchMapping("/status/todo/{idUser}/{idBook}")
+    public CompletableFuture<ResponseEntity> updateBookStatusToDo(@PathVariable UUID idUser, @PathVariable UUID idBook) throws BookNotFoundException, DataBaseException, UnauthorizedUserAboutBookException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
                         service.updateBookStatusToDo(idUser, idBook)
