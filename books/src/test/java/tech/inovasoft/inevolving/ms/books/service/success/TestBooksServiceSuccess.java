@@ -160,7 +160,7 @@ public class TestBooksServiceSuccess {
         // When (Quando)
         when(repository.save(any(Book.class))).thenReturn(expectedBook);
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(oldBook));
-        var resultBook = service.updateBookStatusToDo(idUser, expectedBook.getId());
+        var resultBook = service.updateBookStatus(idUser, expectedBook.getId(), Status.TO_DO);
 
         // Then (Então)
         assertNotNull(resultBook);
@@ -204,7 +204,7 @@ public class TestBooksServiceSuccess {
         // When (Quando)
         when(repository.save(any(Book.class))).thenReturn(expectedBook);
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(oldBook));
-        var resultBook = service.updateBookStatusInProgress(idUser, expectedBook.getId());
+        var resultBook = service.updateBookStatus(idUser, expectedBook.getId(), Status.IN_PROGRESS);
 
         // Then (Então)
         assertNotNull(resultBook);
@@ -248,7 +248,7 @@ public class TestBooksServiceSuccess {
         // When (Quando)
         when(repository.save(any(Book.class))).thenReturn(expectedBook);
         when(repository.findById(any(UUID.class))).thenReturn(Optional.of(oldBook));
-        var resultBook = service.updateBookStatusInProgress(idUser, expectedBook.getId());
+        var resultBook = service.updateBookStatus(idUser, expectedBook.getId(), Status.COMPLETED);
 
         // Then (Então)
         assertNotNull(resultBook);

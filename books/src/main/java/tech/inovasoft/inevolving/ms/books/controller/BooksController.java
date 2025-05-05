@@ -11,6 +11,7 @@ import tech.inovasoft.inevolving.ms.books.domain.exception.BookNotFoundException
 import tech.inovasoft.inevolving.ms.books.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.books.domain.exception.NotSavedDTOInDbException;
 import tech.inovasoft.inevolving.ms.books.domain.exception.UnauthorizedUserAboutBookException;
+import tech.inovasoft.inevolving.ms.books.domain.model.Status;
 import tech.inovasoft.inevolving.ms.books.service.BooksService;
 
 import java.util.UUID;
@@ -52,7 +53,7 @@ public class BooksController {
     public CompletableFuture<ResponseEntity> updateBookStatusToDo(@PathVariable UUID idUser, @PathVariable UUID idBook) throws BookNotFoundException, DataBaseException, UnauthorizedUserAboutBookException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
-                        service.updateBookStatusToDo(idUser, idBook)
+                        service.updateBookStatus(idUser, idBook, Status.TO_DO)
                 )
         );
     }
@@ -63,7 +64,7 @@ public class BooksController {
     public CompletableFuture<ResponseEntity> updateBookStatusInProgress(@PathVariable UUID idUser, @PathVariable UUID idBook) throws BookNotFoundException, DataBaseException, UnauthorizedUserAboutBookException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
-                        service.updateBookStatusInProgress(idUser, idBook)
+                        service.updateBookStatus(idUser, idBook, Status.IN_PROGRESS)
                 )
         );
     }
@@ -74,7 +75,7 @@ public class BooksController {
     public CompletableFuture<ResponseEntity> updateBookStatusCompleted(@PathVariable UUID idUser, @PathVariable UUID idBook) throws BookNotFoundException, DataBaseException, UnauthorizedUserAboutBookException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
-                        service.updateBookStatusCompleted(idUser, idBook)
+                        service.updateBookStatus(idUser, idBook, Status.COMPLETED)
                 )
         );
     }
