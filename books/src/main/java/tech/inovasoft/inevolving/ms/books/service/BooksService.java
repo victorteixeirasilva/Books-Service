@@ -62,7 +62,7 @@ public class BooksService {
     }
 
     public Book updateBookStatus(UUID idUser, UUID idBook, String status) throws DataBaseException, BookNotFoundException, UnauthorizedUserAboutBookException {
-        Optional<Book> optOldBook = Optional.empty();
+        Optional<Book> optOldBook;
         try {
             optOldBook = repository.findById(idBook);
         } catch (Exception e) {
@@ -94,7 +94,27 @@ public class BooksService {
         }
     }
 
-    public ResponseDeleteBookDTO deleteBook(UUID idUser, UUID idBook) {
-        return new ResponseDeleteBookDTO("");
+    public ResponseDeleteBookDTO deleteBook(UUID idUser, UUID idBook) throws DataBaseException, BookNotFoundException, UnauthorizedUserAboutBookException {
+        Optional<Book> optOldBook;
+        try {
+            optOldBook = repository.findById(idBook);
+        } catch (Exception e) {
+            throw new DataBaseException("(findById)");
+        }
+
+        if (optOldBook.isEmpty()){
+            throw new BookNotFoundException();
+        }
+
+        if (!optOldBook.get().getIdUser().equals(idUser)){
+            throw new UnauthorizedUserAboutBookException();
+        }
+
+        try {
+            repository.delete(optOldBook.get());
+            return new ResponseDeleteBookDTO("Livro deletado.");
+        } catch (Exception e) {
+            throw new DataBaseException("(delete)");
+        }
     }
 }

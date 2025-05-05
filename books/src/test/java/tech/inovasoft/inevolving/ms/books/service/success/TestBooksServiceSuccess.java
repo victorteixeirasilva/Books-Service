@@ -264,7 +264,6 @@ public class TestBooksServiceSuccess {
         verify(repository, times(1)).findById(any(UUID.class));
     }
 
-
     @Test
     public void deleteBook() throws UnauthorizedUserAboutBookException, BookNotFoundException, DataBaseException {
         // Given (Dado)
@@ -287,7 +286,7 @@ public class TestBooksServiceSuccess {
 
         // Then (Então)
         assertNotNull(resultBook);
-        assertEquals("Livro deletado", resultBook.message());
+        assertEquals("Livro deletado.", resultBook.message());
 
         verify(repository, times(1)).findById(idBook);
         verify(repository, times(1)).delete(oldBook);
