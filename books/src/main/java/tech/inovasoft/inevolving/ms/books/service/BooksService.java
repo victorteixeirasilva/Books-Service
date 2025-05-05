@@ -143,4 +143,8 @@ public class BooksService {
 
         return bookList;
     }
+
+    public List<Book> getBooksStatus(UUID idUser, String status) throws DataBaseException, BookNotFoundException {
+        return null;
+    }
 }

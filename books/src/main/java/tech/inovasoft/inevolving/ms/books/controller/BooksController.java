@@ -101,4 +101,15 @@ public class BooksController {
                 )
         );
     }
+
+    @Operation(summary = "Ver todos os Livros de um Usuário, com status TODO.", description = "Retorna uma lista com os Livros cadastrados com status TODO.")
+    @Async("asyncExecutor")
+    @GetMapping("/status/todo/{idUser}")
+    public CompletableFuture<ResponseEntity> getBooksToDo(@PathVariable UUID idUser) {
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        service.getBooksStatus(idUser, Status.TO_DO)
+                )
+        );
+    }
 }

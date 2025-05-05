@@ -328,5 +328,51 @@ public class TestBooksServiceSuccess {
         verify(repository, times(1)).findAllByUserId(idUser);
     }
 
+    @Test
+    public void getBooksStatus() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        List<Book> mockBookList = new ArrayList<>();
+
+        for (int i = 1; i <= 10; i++) {
+            var mockBook = new Book(
+                    UUID.randomUUID(),
+                    "title",
+                    "Author",
+                    "Theme",
+                    Status.COMPLETED,
+                    "cover image",
+                    idUser
+            );
+
+            mockBookList.add(mockBook);
+
+            var mockBookTd = new Book(
+                    UUID.randomUUID(),
+                    "title",
+                    "Author",
+                    "Theme",
+                    Status.TO_DO,
+                    "cover image",
+                    idUser
+            );
+
+            mockBookList.add(mockBookTd);
+        }
+
+
+        // When (Quando)
+        when(repository.findAllByUserIdAndStatus(any(UUID.class), any(String.class))).thenReturn(mockBookList);
+        var bookList = service.getBooksStatus(idUser, Status.TO_DO);
+
+        // Then (Então)
+        assertNotNull(bookList);
+        assertEquals(20, mockBookList.size());
+        assertEquals(10, bookList.size());
+        assertEquals(Status.TO_DO, bookList.get(1).getStatus());
+
+        verify(repository, times(1)).findAllByUserIdAndStatus(idUser, Status.TO_DO);
+    }
 
 }
