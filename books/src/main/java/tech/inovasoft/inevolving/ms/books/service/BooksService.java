@@ -161,7 +161,25 @@ public class BooksService {
         return bookList;
     }
 
-    public Book getBook(UUID idUser, UUID idBook) {
-        return null;
+    public Book getBook(UUID idUser, UUID idBook) throws DataBaseException, BookNotFoundException, UnauthorizedUserAboutBookException {
+        Optional<Book> optBook;
+        try {
+            optBook = repository.findById(idBook);
+        } catch (Exception e) {
+            //TODO falta teste
+            throw new DataBaseException("(findById)");
+        }
+
+        if (optBook.isEmpty()){
+            //TODO falta teste
+            throw new BookNotFoundException();
+        }
+
+        if (!optBook.get().getIdUser().equals(idUser)){
+            //TODO falta teste
+            throw new UnauthorizedUserAboutBookException();
+        }
+
+        return optBook.get();
     }
 }

@@ -363,7 +363,7 @@ public class TestBooksServiceSuccess {
     }
 
     @Test
-    public void getBook() {
+    public void getBook() throws BookNotFoundException, DataBaseException, UnauthorizedUserAboutBookException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
 
