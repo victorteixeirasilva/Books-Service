@@ -264,4 +264,35 @@ public class TestBooksServiceSuccess {
         verify(repository, times(1)).findById(any(UUID.class));
     }
 
+
+    @Test
+    public void deleteBook() throws UnauthorizedUserAboutBookException, BookNotFoundException, DataBaseException {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+        var idBook = UUID.randomUUID();
+
+        var oldBook = new Book(
+                idBook,
+                "title",
+                "Author",
+                "Theme",
+                Status.COMPLETED,
+                "cover image",
+                idUser
+        );
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(oldBook));
+        var resultBook = service.deleteBook(idUser, idBook);
+
+        // Then (Então)
+        assertNotNull(resultBook);
+        assertEquals("Livro deletado", resultBook.message());
+
+        verify(repository, times(1)).findById(idBook);
+        verify(repository, times(1)).delete(oldBook);
+    }
+
+
+
 }

@@ -31,7 +31,7 @@ public class TestBooksServiceFailure {
     private BooksService service;
 
     @Test
-    public void addBookNotSavedDTOInDbException() throws NotSavedDTOInDbException {
+    public void addBookNotSavedDTOInDbException() {
         // Given (Dado)
         var idUser = UUID.randomUUID();
 
@@ -78,7 +78,7 @@ public class TestBooksServiceFailure {
     }
 
     @Test
-    public void updateBookDataBaseExceptionInFindById() throws UnauthorizedUserAboutBookException, BookNotFoundException, DataBaseException {
+    public void updateBookDataBaseExceptionInFindById() {
         // Given (Dado)
         var idUser = UUID.randomUUID();
 
@@ -112,7 +112,7 @@ public class TestBooksServiceFailure {
     }
 
     @Test
-    public void updateBookDataBaseExceptionInSave() throws UnauthorizedUserAboutBookException, BookNotFoundException, DataBaseException {
+    public void updateBookDataBaseExceptionInSave() {
         // Given (Dado)
         var idUser = UUID.randomUUID();
 
@@ -158,7 +158,7 @@ public class TestBooksServiceFailure {
     }
 
     @Test
-    public void updateBookBookNotFoundException() throws UnauthorizedUserAboutBookException, BookNotFoundException, DataBaseException {
+    public void updateBookBookNotFoundException() {
         // Given (Dado)
         var idUser = UUID.randomUUID();
 
@@ -202,7 +202,7 @@ public class TestBooksServiceFailure {
     }
 
     @Test
-    public void updateBookUnauthorizedUserAboutBook() throws UnauthorizedUserAboutBookException, BookNotFoundException, DataBaseException {
+    public void updateBookUnauthorizedUserAboutBook() {
         // Given (Dado)
         var idUser = UUID.randomUUID();
 

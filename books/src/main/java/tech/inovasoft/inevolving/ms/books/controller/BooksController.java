@@ -60,7 +60,7 @@ public class BooksController {
 
     @Operation(summary = "Mudar o Status para IN PROGRESS", description = "Retorna o Livro editado.")
     @Async("asyncExecutor")
-    @PatchMapping("/status/inprogress/{idUser}/{idBook}")
+    @PatchMapping("/status/progress/{idUser}/{idBook}")
     public CompletableFuture<ResponseEntity> updateBookStatusInProgress(@PathVariable UUID idUser, @PathVariable UUID idBook) throws BookNotFoundException, DataBaseException, UnauthorizedUserAboutBookException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
@@ -71,11 +71,22 @@ public class BooksController {
 
     @Operation(summary = "Mudar o Status para COMPLETED", description = "Retorna o Livro editado.")
     @Async("asyncExecutor")
-    @PatchMapping("/status/inprogress/{idUser}/{idBook}")
+    @PatchMapping("/status/completed/{idUser}/{idBook}")
     public CompletableFuture<ResponseEntity> updateBookStatusCompleted(@PathVariable UUID idUser, @PathVariable UUID idBook) throws BookNotFoundException, DataBaseException, UnauthorizedUserAboutBookException {
         return CompletableFuture.completedFuture(
                 ResponseEntity.ok(
                         service.updateBookStatus(idUser, idBook, Status.COMPLETED)
+                )
+        );
+    }
+
+    @Operation(summary = "Deletar Livro.", description = "Retorna confirmação que o Livro foi deletado.")
+    @Async("asyncExecutor")
+    @DeleteMapping("/{idUser}/{idBook}")
+    public CompletableFuture<ResponseEntity> deleteBook(@PathVariable UUID idUser, @PathVariable UUID idBook) throws BookNotFoundException, DataBaseException, UnauthorizedUserAboutBookException {
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        service.deleteBook(idUser, idBook)
                 )
         );
     }

@@ -3,12 +3,12 @@ package tech.inovasoft.inevolving.ms.books.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.inovasoft.inevolving.ms.books.domain.dto.request.RequestBookDTO;
+import tech.inovasoft.inevolving.ms.books.domain.dto.response.ResponseDeleteBookDTO;
 import tech.inovasoft.inevolving.ms.books.domain.exception.BookNotFoundException;
 import tech.inovasoft.inevolving.ms.books.domain.exception.DataBaseException;
 import tech.inovasoft.inevolving.ms.books.domain.exception.NotSavedDTOInDbException;
 import tech.inovasoft.inevolving.ms.books.domain.exception.UnauthorizedUserAboutBookException;
 import tech.inovasoft.inevolving.ms.books.domain.model.Book;
-import tech.inovasoft.inevolving.ms.books.domain.model.Status;
 import tech.inovasoft.inevolving.ms.books.repository.BooksRepository;
 
 import java.util.Optional;
@@ -92,5 +92,9 @@ public class BooksService {
         } catch (Exception e) {
             throw new DataBaseException("(save)");
         }
+    }
+
+    public ResponseDeleteBookDTO deleteBook(UUID idUser, UUID idBook) {
+        return new ResponseDeleteBookDTO("");
     }
 }
