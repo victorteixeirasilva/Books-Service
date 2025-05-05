@@ -329,25 +329,13 @@ public class TestBooksServiceSuccess {
     }
 
     @Test
-    public void getBooksStatus() {
+    public void getBooksStatus() throws BookNotFoundException, DataBaseException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
 
         List<Book> mockBookList = new ArrayList<>();
 
         for (int i = 1; i <= 10; i++) {
-            var mockBook = new Book(
-                    UUID.randomUUID(),
-                    "title",
-                    "Author",
-                    "Theme",
-                    Status.COMPLETED,
-                    "cover image",
-                    idUser
-            );
-
-            mockBookList.add(mockBook);
-
             var mockBookTd = new Book(
                     UUID.randomUUID(),
                     "title",
@@ -368,7 +356,6 @@ public class TestBooksServiceSuccess {
 
         // Then (Então)
         assertNotNull(bookList);
-        assertEquals(20, mockBookList.size());
         assertEquals(10, bookList.size());
         assertEquals(Status.TO_DO, bookList.get(1).getStatus());
 

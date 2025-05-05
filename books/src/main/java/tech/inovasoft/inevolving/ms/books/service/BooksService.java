@@ -145,6 +145,19 @@ public class BooksService {
     }
 
     public List<Book> getBooksStatus(UUID idUser, String status) throws DataBaseException, BookNotFoundException {
-        return null;
+        List<Book> bookList;
+        try {
+            bookList = repository.findAllByUserIdAndStatus(idUser, status);
+        } catch (Exception e) {
+            //TODO falta teste
+            throw new DataBaseException("(findAllByUserIdAndStatus)");
+        }
+
+        if (bookList.isEmpty()){
+            //TODO falta teste
+            throw new BookNotFoundException("The user does not have any registered books, with the status ("+status+").");
+        }
+
+        return bookList;
     }
 }
