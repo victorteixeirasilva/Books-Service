@@ -362,4 +362,38 @@ public class TestBooksServiceSuccess {
         verify(repository, times(1)).findAllByUserIdAndStatus(idUser, Status.TO_DO);
     }
 
+    @Test
+    public void getBook() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var idBook = UUID.randomUUID();
+
+        var expectedBook = new Book(
+                idBook,
+                "title",
+                "Author",
+                "Theme",
+                Status.COMPLETED,
+                "cover image",
+                idUser
+        );
+
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(expectedBook));
+        var resultBook = service.getBook(idUser, idBook);
+
+        // Then (Então)
+        assertNotNull(resultBook);
+        assertEquals(expectedBook.getId(), resultBook.getId());
+        assertEquals(expectedBook.getIdUser(), resultBook.getIdUser());
+        assertEquals(expectedBook.getTitle(), resultBook.getTitle());
+        assertEquals(expectedBook.getAuthor(), resultBook.getAuthor());
+        assertEquals(expectedBook.getStatus(), resultBook.getStatus());
+        assertEquals(expectedBook.getCoverImage(), resultBook.getCoverImage());
+
+        verify(repository, times(1)).findById(idBook);
+    }
+
 }

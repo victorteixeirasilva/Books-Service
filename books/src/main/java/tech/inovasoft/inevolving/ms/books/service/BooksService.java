@@ -160,4 +160,8 @@ public class BooksService {
 
         return bookList;
     }
+
+    public Book getBook(UUID idUser, UUID idBook) {
+        return null;
+    }
 }

@@ -134,4 +134,15 @@ public class BooksController {
                 )
         );
     }
+
+    @Operation(summary = "Pegar Livro.", description = "Retorna o livro cadastrado.")
+    @Async("asyncExecutor")
+    @GetMapping("/{idUser}/{idBook}")
+    public CompletableFuture<ResponseEntity> getBook(@PathVariable UUID idUser, @PathVariable UUID idBook) throws BookNotFoundException, DataBaseException, UnauthorizedUserAboutBookException {
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        service.getBook(idUser, idBook)
+                )
+        );
+    }
 }
