@@ -67,14 +67,17 @@ public class BooksService {
         try {
             optOldBook = repository.findById(idBook);
         } catch (Exception e) {
+            //TODO falta teste
             throw new DataBaseException("(findById)");
         }
 
         if (optOldBook.isEmpty()){
+            //TODO falta teste
             throw new BookNotFoundException();
         }
 
         if (!optOldBook.get().getIdUser().equals(idUser)){
+            //TODO falta teste
             throw new UnauthorizedUserAboutBookException();
         }
 
@@ -91,6 +94,7 @@ public class BooksService {
         try {
             return repository.save(newBook);
         } catch (Exception e) {
+            //TODO falta teste
             throw new DataBaseException("(save)");
         }
     }
@@ -100,14 +104,17 @@ public class BooksService {
         try {
             optOldBook = repository.findById(idBook);
         } catch (Exception e) {
+            //TODO falta teste
             throw new DataBaseException("(findById)");
         }
 
         if (optOldBook.isEmpty()){
+            //TODO falta teste
             throw new BookNotFoundException();
         }
 
         if (!optOldBook.get().getIdUser().equals(idUser)){
+            //TODO falta teste
             throw new UnauthorizedUserAboutBookException();
         }
 
@@ -115,11 +122,25 @@ public class BooksService {
             repository.delete(optOldBook.get());
             return new ResponseDeleteBookDTO("Livro deletado.");
         } catch (Exception e) {
+            //TODO falta teste
             throw new DataBaseException("(delete)");
         }
     }
 
-    public List<Book> getBooks(UUID idUser) {
-        return null;
+    public List<Book> getBooks(UUID idUser) throws DataBaseException, BookNotFoundException {
+        List<Book> bookList;
+        try {
+            bookList = repository.findAllByUserId(idUser);
+        } catch (Exception e) {
+            //TODO falta teste
+            throw new DataBaseException("(findAllByUserId)");
+        }
+
+        if (bookList.isEmpty()){
+            //TODO falta teste
+            throw new BookNotFoundException("User does not have any registered books.");
+        }
+
+        return bookList;
     }
 }
