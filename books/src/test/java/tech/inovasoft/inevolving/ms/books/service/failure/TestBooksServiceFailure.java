@@ -245,5 +245,181 @@ public class TestBooksServiceFailure {
         verify(repository, times(1)).findById(any(UUID.class));
     }
 
+    @Test
+    public void updateBookStatusDataBaseExceptionFindById() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var dto = new RequestBookDTO(
+                "title2",
+                "Author2",
+                "Theme2",
+                "CoverImage2"
+        );
+
+        var expectedBook = new Book(
+                UUID.randomUUID(),
+                dto.title(),
+                dto.author(),
+                dto.theme(),
+                Status.TO_DO,
+                dto.coverImage(),
+                idUser
+        );
+
+        var oldBook = new Book(
+                expectedBook.getId(),
+                "title",
+                "Author",
+                "Theme",
+                Status.TO_DO,
+                "cover image",
+                UUID.randomUUID()
+        );
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenThrow(new RuntimeException());
+        var exception = assertThrows(DataBaseException.class, () -> {
+            service.updateBookStatus(idUser, expectedBook.getId(), Status.TO_DO);
+        });
+
+        // Then (Então)
+        assertEquals("Error in integration with Database (findById)", exception.getMessage());
+
+        verify(repository, times(1)).findById(expectedBook.getId());
+    }
+
+    @Test
+    public void updateBookStatusBookNotFoundException() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var dto = new RequestBookDTO(
+                "title2",
+                "Author2",
+                "Theme2",
+                "CoverImage2"
+        );
+
+        var expectedBook = new Book(
+                UUID.randomUUID(),
+                dto.title(),
+                dto.author(),
+                dto.theme(),
+                Status.TO_DO,
+                dto.coverImage(),
+                idUser
+        );
+
+        var oldBook = new Book(
+                expectedBook.getId(),
+                "title",
+                "Author",
+                "Theme",
+                Status.TO_DO,
+                "cover image",
+                UUID.randomUUID()
+        );
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.empty());
+        var exception = assertThrows(BookNotFoundException.class, () -> {
+            service.updateBookStatus(idUser, expectedBook.getId(), Status.TO_DO);
+        });
+
+        // Then (Então)
+        assertEquals("Book not found in database", exception.getMessage());
+
+        verify(repository, times(1)).findById(expectedBook.getId());
+    }
+
+    @Test
+    public void updateBookStatusUnauthorizedUserAboutBookException() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var dto = new RequestBookDTO(
+                "title2",
+                "Author2",
+                "Theme2",
+                "CoverImage2"
+        );
+
+        var expectedBook = new Book(
+                UUID.randomUUID(),
+                dto.title(),
+                dto.author(),
+                dto.theme(),
+                Status.TO_DO,
+                dto.coverImage(),
+                UUID.randomUUID()
+        );
+
+        var oldBook = new Book(
+                expectedBook.getId(),
+                "title",
+                "Author",
+                "Theme",
+                Status.TO_DO,
+                "cover image",
+                UUID.randomUUID()
+        );
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(expectedBook));
+        var exception = assertThrows(UnauthorizedUserAboutBookException.class, () -> {
+            service.updateBookStatus(idUser, expectedBook.getId(), Status.TO_DO);
+        });
+
+        // Then (Então)
+        assertEquals(new UnauthorizedUserAboutBookException().getMessage(), exception.getMessage());
+
+        verify(repository, times(1)).findById(expectedBook.getId());
+    }
+
+    @Test
+    public void updateBookStatusDataBaseExceptionSave() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var dto = new RequestBookDTO(
+                "title2",
+                "Author2",
+                "Theme2",
+                "CoverImage2"
+        );
+
+        var expectedBook = new Book(
+                UUID.randomUUID(),
+                dto.title(),
+                dto.author(),
+                dto.theme(),
+                Status.TO_DO,
+                dto.coverImage(),
+                idUser
+        );
+
+        var oldBook = new Book(
+                expectedBook.getId(),
+                "title",
+                "Author",
+                "Theme",
+                Status.TO_DO,
+                "cover image",
+                UUID.randomUUID()
+        );
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(expectedBook));
+        when(repository.save(any(Book.class))).thenThrow(new RuntimeException());
+        var exception = assertThrows(DataBaseException.class, () -> {
+            service.updateBookStatus(idUser, expectedBook.getId(), Status.TO_DO);
+        });
+
+        // Then (Então)
+        assertEquals(new DataBaseException().getMessage() + " (save)", exception.getMessage());
+
+        verify(repository, times(1)).findById(expectedBook.getId());
+    }
 
 }

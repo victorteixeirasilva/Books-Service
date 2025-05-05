@@ -67,17 +67,14 @@ public class BooksService {
         try {
             optOldBook = repository.findById(idBook);
         } catch (Exception e) {
-            //TODO falta teste
             throw new DataBaseException("(findById)");
         }
 
         if (optOldBook.isEmpty()){
-            //TODO falta teste
             throw new BookNotFoundException();
         }
 
         if (!optOldBook.get().getIdUser().equals(idUser)){
-            //TODO falta teste
             throw new UnauthorizedUserAboutBookException();
         }
 
@@ -94,7 +91,6 @@ public class BooksService {
         try {
             return repository.save(newBook);
         } catch (Exception e) {
-            //TODO falta teste
             throw new DataBaseException("(save)");
         }
     }
