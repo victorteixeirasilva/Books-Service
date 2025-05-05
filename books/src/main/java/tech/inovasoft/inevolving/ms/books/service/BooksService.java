@@ -11,6 +11,7 @@ import tech.inovasoft.inevolving.ms.books.domain.exception.UnauthorizedUserAbout
 import tech.inovasoft.inevolving.ms.books.domain.model.Book;
 import tech.inovasoft.inevolving.ms.books.repository.BooksRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -116,5 +117,9 @@ public class BooksService {
         } catch (Exception e) {
             throw new DataBaseException("(delete)");
         }
+    }
+
+    public List<Book> getBooks(UUID idUser) {
+        return null;
     }
 }

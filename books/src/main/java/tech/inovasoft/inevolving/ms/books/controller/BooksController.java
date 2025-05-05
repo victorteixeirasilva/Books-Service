@@ -90,4 +90,15 @@ public class BooksController {
                 )
         );
     }
+
+    @Operation(summary = "Ver todos os Livros de um Usuário.", description = "Retorna uma lista com os Livros cadastrados.")
+    @Async("asyncExecutor")
+    @GetMapping("/{idUser}")
+    public CompletableFuture<ResponseEntity> getBooks(@PathVariable UUID idUser) {
+        return CompletableFuture.completedFuture(
+                ResponseEntity.ok(
+                        service.getBooks(idUser)
+                )
+        );
+    }
 }

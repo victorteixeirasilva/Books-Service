@@ -20,6 +20,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -220,7 +222,7 @@ public class TestBooksServiceSuccess {
         verify(repository, times(1)).findById(any(UUID.class));
     }
 
-   @Test
+    @Test
     public void updateBookStatusCompleted() throws UnauthorizedUserAboutBookException, BookNotFoundException, DataBaseException {
         // Given (Dado)
         var idUser = UUID.randomUUID();
@@ -292,6 +294,39 @@ public class TestBooksServiceSuccess {
         verify(repository, times(1)).delete(oldBook);
     }
 
+    @Test
+    public void getBooks() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        List<Book> mockBookList = new ArrayList<>();
+
+        for (int i = 1; i <= 10; i++) {
+            var mockBook = new Book(
+                    UUID.randomUUID(),
+                    "title",
+                    "Author",
+                    "Theme",
+                    Status.COMPLETED,
+                    "cover image",
+                    idUser
+            );
+
+            mockBookList.add(mockBook);
+
+        }
+
+
+        // When (Quando)
+        when(repository.findAllByUserId(any(UUID.class))).thenReturn(mockBookList);
+        var bookList = service.getBooks(idUser);
+
+        // Then (Então)
+        assertNotNull(bookList);
+        assertEquals(10, bookList.size());
+
+        verify(repository, times(1)).findAllByUserId(idUser);
+    }
 
 
 }
