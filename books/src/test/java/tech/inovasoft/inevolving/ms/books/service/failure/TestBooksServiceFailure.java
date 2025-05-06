@@ -15,6 +15,7 @@ import tech.inovasoft.inevolving.ms.books.domain.model.Status;
 import tech.inovasoft.inevolving.ms.books.repository.BooksRepository;
 import tech.inovasoft.inevolving.ms.books.service.BooksService;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -418,6 +419,492 @@ public class TestBooksServiceFailure {
 
         // Then (Então)
         assertEquals(new DataBaseException().getMessage() + " (save)", exception.getMessage());
+
+        verify(repository, times(1)).findById(expectedBook.getId());
+    }
+
+    @Test
+    public void deleteBookDataBaseExceptionFindById() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var dto = new RequestBookDTO(
+                "title2",
+                "Author2",
+                "Theme2",
+                "CoverImage2"
+        );
+
+        var expectedBook = new Book(
+                UUID.randomUUID(),
+                dto.title(),
+                dto.author(),
+                dto.theme(),
+                Status.TO_DO,
+                dto.coverImage(),
+                idUser
+        );
+
+        var oldBook = new Book(
+                expectedBook.getId(),
+                "title",
+                "Author",
+                "Theme",
+                Status.TO_DO,
+                "cover image",
+                UUID.randomUUID()
+        );
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenThrow(new RuntimeException());
+        var exception = assertThrows(DataBaseException.class, () -> {
+            service.deleteBook(idUser, expectedBook.getId());
+        });
+
+        // Then (Então)
+        assertEquals(new DataBaseException().getMessage() + " (findById)", exception.getMessage());
+
+        verify(repository, times(1)).findById(expectedBook.getId());
+    }
+
+    @Test
+    public void deleteBookBookNotFoundException() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var dto = new RequestBookDTO(
+                "title2",
+                "Author2",
+                "Theme2",
+                "CoverImage2"
+        );
+
+        var expectedBook = new Book(
+                UUID.randomUUID(),
+                dto.title(),
+                dto.author(),
+                dto.theme(),
+                Status.TO_DO,
+                dto.coverImage(),
+                idUser
+        );
+
+        var oldBook = new Book(
+                expectedBook.getId(),
+                "title",
+                "Author",
+                "Theme",
+                Status.TO_DO,
+                "cover image",
+                UUID.randomUUID()
+        );
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.empty());
+        var exception = assertThrows(BookNotFoundException.class, () -> {
+            service.deleteBook(idUser, expectedBook.getId());
+        });
+
+        // Then (Então)
+        assertEquals(new BookNotFoundException().getMessage(), exception.getMessage());
+
+        verify(repository, times(1)).findById(expectedBook.getId());
+    }
+
+    @Test
+    public void deleteBookUnauthorizedUserAboutBookException() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var dto = new RequestBookDTO(
+                "title2",
+                "Author2",
+                "Theme2",
+                "CoverImage2"
+        );
+
+        var expectedBook = new Book(
+                UUID.randomUUID(),
+                dto.title(),
+                dto.author(),
+                dto.theme(),
+                Status.TO_DO,
+                dto.coverImage(),
+                UUID.randomUUID()
+        );
+
+        var oldBook = new Book(
+                expectedBook.getId(),
+                "title",
+                "Author",
+                "Theme",
+                Status.TO_DO,
+                "cover image",
+                UUID.randomUUID()
+        );
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(expectedBook));
+        var exception = assertThrows(UnauthorizedUserAboutBookException.class, () -> {
+            service.deleteBook(idUser, expectedBook.getId());
+        });
+
+        // Then (Então)
+        assertEquals(new UnauthorizedUserAboutBookException().getMessage(), exception.getMessage());
+
+        verify(repository, times(1)).findById(expectedBook.getId());
+    }
+
+    @Test
+    public void deleteBookDataBaseExceptionDelete() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var dto = new RequestBookDTO(
+                "title2",
+                "Author2",
+                "Theme2",
+                "CoverImage2"
+        );
+
+        var expectedBook = new Book(
+                UUID.randomUUID(),
+                dto.title(),
+                dto.author(),
+                dto.theme(),
+                Status.TO_DO,
+                dto.coverImage(),
+                idUser
+        );
+
+        var oldBook = new Book(
+                expectedBook.getId(),
+                "title",
+                "Author",
+                "Theme",
+                Status.TO_DO,
+                "cover image",
+                UUID.randomUUID()
+        );
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(expectedBook));
+        doThrow(new RuntimeException()).when(repository).delete(any(Book.class));
+        var exception = assertThrows(DataBaseException.class, () -> {
+            service.deleteBook(idUser, expectedBook.getId());
+        });
+
+        // Then (Então)
+        assertEquals(new DataBaseException().getMessage() + " (delete)", exception.getMessage());
+
+        verify(repository, times(1)).findById(expectedBook.getId());
+        verify(repository, times(1)).delete(expectedBook);
+    }
+
+    @Test
+    public void getBooksDataBaseException() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var dto = new RequestBookDTO(
+                "title2",
+                "Author2",
+                "Theme2",
+                "CoverImage2"
+        );
+
+        var expectedBook = new Book(
+                UUID.randomUUID(),
+                dto.title(),
+                dto.author(),
+                dto.theme(),
+                Status.TO_DO,
+                dto.coverImage(),
+                idUser
+        );
+
+        var oldBook = new Book(
+                expectedBook.getId(),
+                "title",
+                "Author",
+                "Theme",
+                Status.TO_DO,
+                "cover image",
+                UUID.randomUUID()
+        );
+
+        // When (Quando)
+        when(repository.findAllByUserId(any(UUID.class))).thenThrow(new RuntimeException());
+        var exception = assertThrows(DataBaseException.class, () -> {
+            service.getBooks(idUser);
+        });
+
+        // Then (Então)
+        assertEquals(new DataBaseException().getMessage() + " (findAllByUserId)", exception.getMessage());
+
+        verify(repository, times(1)).findAllByUserId(idUser);
+    }
+
+    @Test
+    public void getBooksBookNotFoundException() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var dto = new RequestBookDTO(
+                "title2",
+                "Author2",
+                "Theme2",
+                "CoverImage2"
+        );
+
+        var expectedBook = new Book(
+                UUID.randomUUID(),
+                dto.title(),
+                dto.author(),
+                dto.theme(),
+                Status.TO_DO,
+                dto.coverImage(),
+                idUser
+        );
+
+        var oldBook = new Book(
+                expectedBook.getId(),
+                "title",
+                "Author",
+                "Theme",
+                Status.TO_DO,
+                "cover image",
+                UUID.randomUUID()
+        );
+
+        // When (Quando)
+        when(repository.findAllByUserId(any(UUID.class))).thenReturn(new ArrayList<>());
+        var exception = assertThrows(BookNotFoundException.class, () -> {
+            service.getBooks(idUser);
+        });
+
+        // Then (Então)
+        assertEquals("User does not have any registered books.", exception.getMessage());
+
+        verify(repository, times(1)).findAllByUserId(idUser);
+    }
+
+    @Test
+    public void getBooksStatusDataBaseException() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var dto = new RequestBookDTO(
+                "title2",
+                "Author2",
+                "Theme2",
+                "CoverImage2"
+        );
+
+        var expectedBook = new Book(
+                UUID.randomUUID(),
+                dto.title(),
+                dto.author(),
+                dto.theme(),
+                Status.TO_DO,
+                dto.coverImage(),
+                idUser
+        );
+
+        var oldBook = new Book(
+                expectedBook.getId(),
+                "title",
+                "Author",
+                "Theme",
+                Status.TO_DO,
+                "cover image",
+                UUID.randomUUID()
+        );
+
+        // When (Quando)
+        when(repository.findAllByUserIdAndStatus(any(UUID.class), any(String.class))).thenThrow(new RuntimeException());
+        var exception = assertThrows(DataBaseException.class, () -> {
+            service.getBooksStatus(idUser, Status.TO_DO);
+        });
+
+        // Then (Então)
+        assertEquals(new DataBaseException().getMessage() + " (findAllByUserIdAndStatus)", exception.getMessage());
+
+        verify(repository, times(1)).findAllByUserIdAndStatus(idUser, Status.TO_DO);
+    }
+
+    @Test
+    public void getBooksStatusBookNotFoundException() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var dto = new RequestBookDTO(
+                "title2",
+                "Author2",
+                "Theme2",
+                "CoverImage2"
+        );
+
+        var expectedBook = new Book(
+                UUID.randomUUID(),
+                dto.title(),
+                dto.author(),
+                dto.theme(),
+                Status.TO_DO,
+                dto.coverImage(),
+                idUser
+        );
+
+        var oldBook = new Book(
+                expectedBook.getId(),
+                "title",
+                "Author",
+                "Theme",
+                Status.TO_DO,
+                "cover image",
+                UUID.randomUUID()
+        );
+
+        // When (Quando)
+        when(repository.findAllByUserIdAndStatus(any(UUID.class), any(String.class))).thenReturn(new ArrayList<>());
+        var exception = assertThrows(BookNotFoundException.class, () -> {
+            service.getBooksStatus(idUser, Status.TO_DO);
+        });
+
+        // Then (Então)
+        assertEquals("The user does not have any registered books, with the status (" + Status.TO_DO + ").", exception.getMessage());
+
+        verify(repository, times(1)).findAllByUserIdAndStatus(idUser, Status.TO_DO);
+    }
+
+    @Test
+    public void getBookDataBaseException() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var dto = new RequestBookDTO(
+                "title2",
+                "Author2",
+                "Theme2",
+                "CoverImage2"
+        );
+
+        var expectedBook = new Book(
+                UUID.randomUUID(),
+                dto.title(),
+                dto.author(),
+                dto.theme(),
+                Status.TO_DO,
+                dto.coverImage(),
+                idUser
+        );
+
+        var oldBook = new Book(
+                expectedBook.getId(),
+                "title",
+                "Author",
+                "Theme",
+                Status.TO_DO,
+                "cover image",
+                UUID.randomUUID()
+        );
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenThrow(new RuntimeException());
+        var exception = assertThrows(DataBaseException.class, () -> {
+            service.getBook(idUser, expectedBook.getId());
+        });
+
+        // Then (Então)
+        assertEquals(new DataBaseException().getMessage() + " (findById)", exception.getMessage());
+
+        verify(repository, times(1)).findById(expectedBook.getId());
+    }
+
+    @Test
+    public void getBookBookNotFoundException() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var dto = new RequestBookDTO(
+                "title2",
+                "Author2",
+                "Theme2",
+                "CoverImage2"
+        );
+
+        var expectedBook = new Book(
+                UUID.randomUUID(),
+                dto.title(),
+                dto.author(),
+                dto.theme(),
+                Status.TO_DO,
+                dto.coverImage(),
+                idUser
+        );
+
+        var oldBook = new Book(
+                expectedBook.getId(),
+                "title",
+                "Author",
+                "Theme",
+                Status.TO_DO,
+                "cover image",
+                UUID.randomUUID()
+        );
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.empty());
+        var exception = assertThrows(BookNotFoundException.class, () -> {
+            service.getBook(idUser, expectedBook.getId());
+        });
+
+        // Then (Então)
+        assertEquals(new BookNotFoundException().getMessage(), exception.getMessage());
+
+        verify(repository, times(1)).findById(expectedBook.getId());
+    }
+
+    @Test
+    public void getBookUnauthorizedUserAboutBookException() {
+        // Given (Dado)
+        var idUser = UUID.randomUUID();
+
+        var dto = new RequestBookDTO(
+                "title2",
+                "Author2",
+                "Theme2",
+                "CoverImage2"
+        );
+
+        var expectedBook = new Book(
+                UUID.randomUUID(),
+                dto.title(),
+                dto.author(),
+                dto.theme(),
+                Status.TO_DO,
+                dto.coverImage(),
+                UUID.randomUUID()
+        );
+
+        var oldBook = new Book(
+                expectedBook.getId(),
+                "title",
+                "Author",
+                "Theme",
+                Status.TO_DO,
+                "cover image",
+                UUID.randomUUID()
+        );
+
+        // When (Quando)
+        when(repository.findById(any(UUID.class))).thenReturn(Optional.of(expectedBook));
+        var exception = assertThrows(UnauthorizedUserAboutBookException.class, () -> {
+            service.getBook(idUser, expectedBook.getId());
+        });
+
+        // Then (Então)
+        assertEquals(new UnauthorizedUserAboutBookException().getMessage(), exception.getMessage());
 
         verify(repository, times(1)).findById(expectedBook.getId());
     }
