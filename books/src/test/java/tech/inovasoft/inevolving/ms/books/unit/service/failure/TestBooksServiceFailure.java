@@ -1,4 +1,4 @@
-package tech.inovasoft.inevolving.ms.books.service.failure;
+package tech.inovasoft.inevolving.ms.books.unit.service.failure;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
