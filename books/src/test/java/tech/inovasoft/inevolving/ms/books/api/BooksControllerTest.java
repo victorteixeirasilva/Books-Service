@@ -149,17 +149,61 @@ public class BooksControllerTest {
         Assertions.assertEquals(updateBook.coverImage(), book.getCoverImage());
         Assertions.assertEquals(updateBook.theme(), book.getTheme());
         Assertions.assertTrue(deleteBook(idUser, idBook));
-
     }
 
     @Test
     public void updateBookStatusToDo_ok() {
-        //TODO: Desenvolver teste do End-Point
+
+        UUID idBook = UUID.fromString(addBook());
+
+        // Cria a especificação da requisição
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        ValidatableResponse responseProgress = requestSpecification
+                .when()
+                .patch("http://localhost:" + port + "/ms/books/status/progress/" + idUser + "/" + idBook)
+                .then();
+
+        responseProgress.assertThat().statusCode(200);
+
+        // Faz a requisição GET e armazena a resposta
+        ValidatableResponse response = requestSpecification
+                .when()
+                .patch("http://localhost:" + port + "/ms/books/status/todo/" + idUser + "/" + idBook)
+                .then();
+
+        Book book = getBook(idUser, idBook);
+
+        // Valida a resposta
+        response.assertThat().statusCode(200);
+
+        Assertions.assertEquals(Status.TO_DO, book.getStatus());
+        Assertions.assertTrue(deleteBook(idUser, idBook));
     }
 
     @Test
     public void updateBookStatusInProgress_ok() {
-        //TODO: Desenvolver teste do End-Point
+        UUID idBook = UUID.fromString(addBook());
+
+        // Cria a especificação da requisição
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        // Faz a requisição GET e armazena a resposta
+        ValidatableResponse response = requestSpecification
+                .when()
+                .patch("http://localhost:" + port + "/ms/books/status/progress/" + idUser + "/" + idBook)
+                .then();
+
+        Book book = getBook(idUser, idBook);
+
+        // Valida a resposta
+        response.assertThat().statusCode(200);
+
+        Assertions.assertEquals(Status.IN_PROGRESS, book.getStatus());
+        Assertions.assertTrue(deleteBook(idUser, idBook));
+
     }
 
     @Test
