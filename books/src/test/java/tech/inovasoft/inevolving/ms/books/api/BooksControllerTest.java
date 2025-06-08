@@ -14,6 +14,8 @@ import tech.inovasoft.inevolving.ms.books.domain.dto.request.RequestBookDTO;
 import tech.inovasoft.inevolving.ms.books.domain.model.Book;
 import tech.inovasoft.inevolving.ms.books.domain.model.Status;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -243,7 +245,33 @@ public class BooksControllerTest {
 
     @Test
     public void getBooks_ok() {
-        //TODO: Desenvolver teste do End-Point
+        List<UUID> books = new ArrayList<>();
+        books.add(UUID.fromString(addBook()));
+        books.add(UUID.fromString(addBook()));
+        books.add(UUID.fromString(addBook()));
+        books.add(UUID.fromString(addBook()));
+        books.add(UUID.fromString(addBook()));
+
+        // Cria a especificação da requisição
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        // Faz a requisição GET e armazena a resposta
+        ValidatableResponse response = requestSpecification
+                .when()
+                .get("http://localhost:" + port + "/ms/books/" + idUser)
+                .then();
+
+        // Valida a resposta
+        response.assertThat().statusCode(200);
+
+        List<Book> responseBook = response.extract().body().jsonPath().get();
+
+        Assertions.assertEquals(books.size(), responseBook.size());
+        for (UUID b:books){
+            Assertions.assertTrue(deleteBook(idUser, b));
+        }
+
     }
 
     @Test
