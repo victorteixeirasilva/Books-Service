@@ -352,7 +352,42 @@ public class BooksControllerTest {
 
     @Test
     public void getBooksCompleted_ok() {
-        //TODO: Desenvolver teste do End-Point
+        List<UUID> books = new ArrayList<>();
+        books.add(UUID.fromString(addBook()));
+        books.add(UUID.fromString(addBook()));
+        books.add(UUID.fromString(addBook()));
+        books.add(UUID.fromString(addBook()));
+
+        // Cria a especificação da requisição
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        ValidatableResponse responseCompleted = requestSpecification
+                .when()
+                .patch("http://localhost:" + port + "/ms/books/status/completed/" + idUser + "/" + books.getFirst())
+                .then();
+
+        ValidatableResponse responseCompleted1 = requestSpecification
+                .when()
+                .patch("http://localhost:" + port + "/ms/books/status/completed/" + idUser + "/" + books.get(books.size()-1))
+                .then();
+
+
+        // Faz a requisição GET e armazena a resposta
+        ValidatableResponse response = requestSpecification
+                .when()
+                .get("http://localhost:" + port + "/ms/books/status/completed/" + idUser)
+                .then();
+
+        // Valida a resposta
+        response.assertThat().statusCode(200);
+
+        List<Book> responseBook = response.extract().body().jsonPath().get();
+
+        Assertions.assertEquals(2, responseBook.size());
+        for (UUID b:books){
+            Assertions.assertTrue(deleteBook(idUser, b));
+        }
     }
 
     @Test
