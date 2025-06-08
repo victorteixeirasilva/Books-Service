@@ -42,7 +42,7 @@ public class BooksController {
 
     @Operation(summary = "Editar Livro. | Edit Book.", description = "Retorna o Livro editado. | Returns the edited Book.")
     @Async("asyncExecutor")
-    @PatchMapping("/{idUser}/{idBook}")
+    @PutMapping("/{idUser}/{idBook}")
     public CompletableFuture<ResponseEntity<Book>> updateBook(
             @PathVariable UUID idUser,
             @PathVariable UUID idBook,
