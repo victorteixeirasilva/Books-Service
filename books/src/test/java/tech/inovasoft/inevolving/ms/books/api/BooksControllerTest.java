@@ -392,7 +392,10 @@ public class BooksControllerTest {
 
     @Test
     public void getBook_ok() {
-        //TODO: Desenvolver teste do End-Point
+        UUID idBook = UUID.fromString(addBook());
+        Book book = getBook(idUser, idBook);
+        Assertions.assertEquals(idBook, book.getId());
+        Assertions.assertTrue(deleteBook(idUser, idBook));
     }
 
 }
