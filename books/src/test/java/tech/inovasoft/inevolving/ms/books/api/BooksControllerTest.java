@@ -203,12 +203,29 @@ public class BooksControllerTest {
 
         Assertions.assertEquals(Status.IN_PROGRESS, book.getStatus());
         Assertions.assertTrue(deleteBook(idUser, idBook));
-
     }
 
     @Test
     public void updateBookStatusCompleted_ok() {
-        //TODO: Desenvolver teste do End-Point
+        UUID idBook = UUID.fromString(addBook());
+
+        // Cria a especificação da requisição
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON);
+
+        // Faz a requisição GET e armazena a resposta
+        ValidatableResponse response = requestSpecification
+                .when()
+                .patch("http://localhost:" + port + "/ms/books/status/completed/" + idUser + "/" + idBook)
+                .then();
+
+        Book book = getBook(idUser, idBook);
+
+        // Valida a resposta
+        response.assertThat().statusCode(200);
+
+        Assertions.assertEquals(Status.COMPLETED, book.getStatus());
+        Assertions.assertTrue(deleteBook(idUser, idBook));
     }
 
     @Test
