@@ -55,7 +55,7 @@ public class BooksController {
 
     @Operation(summary = "Mudar o Status para TODO | Change Status TODO", description = "Retorna o Livro editado. | Returns the edited Book.")
     @Async("asyncExecutor")
-    @PatchMapping("/status/todo/{idUser}/{idBook}")
+    @PutMapping("/status/todo/{idUser}/{idBook}")
     public CompletableFuture<ResponseEntity<Book>> updateBookStatusToDo(
             @PathVariable UUID idUser,
             @PathVariable UUID idBook
@@ -67,7 +67,7 @@ public class BooksController {
 
     @Operation(summary = "Mudar o Status para IN PROGRESS | Change Status to IN PROGRESS", description = "Retorna o Livro editado. | Returns the edited Book.")
     @Async("asyncExecutor")
-    @PatchMapping("/status/progress/{idUser}/{idBook}")
+    @PutMapping("/status/progress/{idUser}/{idBook}")
     public CompletableFuture<ResponseEntity<Book>> updateBookStatusInProgress(
             @PathVariable UUID idUser,
             @PathVariable UUID idBook
@@ -79,7 +79,7 @@ public class BooksController {
 
     @Operation(summary = "Mudar o Status para COMPLETED | Change Status to COMPLETED", description = "Retorna o Livro editado. | Returns the edited Book.")
     @Async("asyncExecutor")
-    @PatchMapping("/status/completed/{idUser}/{idBook}")
+    @PutMapping("/status/completed/{idUser}/{idBook}")
     public CompletableFuture<ResponseEntity<Book>> updateBookStatusCompleted(
             @PathVariable UUID idUser,
             @PathVariable UUID idBook

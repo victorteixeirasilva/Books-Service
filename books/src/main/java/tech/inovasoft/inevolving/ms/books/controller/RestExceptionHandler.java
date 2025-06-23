@@ -14,7 +14,7 @@ import tech.inovasoft.inevolving.ms.books.domain.exception.UnauthorizedUserAbout
 public class RestExceptionHandler {
 
     @ExceptionHandler(NotSavedDTOInDbException.class)
-    private ResponseEntity notSavedDTOInDbException(NotSavedDTOInDbException exception) {
+    private ResponseEntity<ExceptionResponse> notSavedDTOInDbException(NotSavedDTOInDbException exception) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ExceptionResponse(
@@ -24,7 +24,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(UnauthorizedUserAboutBookException.class)
-    private ResponseEntity unauthorizedUserAboutBookException(UnauthorizedUserAboutBookException exception) {
+    private ResponseEntity<ExceptionResponse> unauthorizedUserAboutBookException(UnauthorizedUserAboutBookException exception) {
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
                 .body(new ExceptionResponse(
@@ -34,7 +34,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(BookNotFoundException.class)
-    private ResponseEntity bookNotFoundException(BookNotFoundException exception) {
+    private ResponseEntity<ExceptionResponse> bookNotFoundException(BookNotFoundException exception) {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new ExceptionResponse(
@@ -44,7 +44,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(DataBaseException.class)
-    private ResponseEntity dataBaseException(DataBaseException exception) {
+    private ResponseEntity<ExceptionResponse> dataBaseException(DataBaseException exception) {
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ExceptionResponse(
