@@ -164,7 +164,7 @@ public class BooksControllerTest {
 
         ValidatableResponse responseProgress = requestSpecification
                 .when()
-                .patch("http://localhost:" + port + "/ms/books/status/progress/" + idUser + "/" + idBook)
+                .put("http://localhost:" + port + "/ms/books/status/progress/" + idUser + "/" + idBook)
                 .then();
 
         responseProgress.assertThat().statusCode(200);
@@ -172,7 +172,7 @@ public class BooksControllerTest {
         // Faz a requisição GET e armazena a resposta
         ValidatableResponse response = requestSpecification
                 .when()
-                .patch("http://localhost:" + port + "/ms/books/status/todo/" + idUser + "/" + idBook)
+                .put("http://localhost:" + port + "/ms/books/status/todo/" + idUser + "/" + idBook)
                 .then();
 
         Book book = getBook(idUser, idBook);
@@ -195,7 +195,7 @@ public class BooksControllerTest {
         // Faz a requisição GET e armazena a resposta
         ValidatableResponse response = requestSpecification
                 .when()
-                .patch("http://localhost:" + port + "/ms/books/status/progress/" + idUser + "/" + idBook)
+                .put("http://localhost:" + port + "/ms/books/status/progress/" + idUser + "/" + idBook)
                 .then();
 
         Book book = getBook(idUser, idBook);
@@ -218,7 +218,7 @@ public class BooksControllerTest {
         // Faz a requisição GET e armazena a resposta
         ValidatableResponse response = requestSpecification
                 .when()
-                .patch("http://localhost:" + port + "/ms/books/status/completed/" + idUser + "/" + idBook)
+                .put("http://localhost:" + port + "/ms/books/status/completed/" + idUser + "/" + idBook)
                 .then();
 
         Book book = getBook(idUser, idBook);
@@ -289,9 +289,10 @@ public class BooksControllerTest {
 
         ValidatableResponse responseCompleted = requestSpecification
                 .when()
-                .patch("http://localhost:" + port + "/ms/books/status/completed/" + idUser + "/" + books.getFirst())
+                .put("http://localhost:" + port + "/ms/books/status/completed/" + idUser + "/" + books.getFirst())
                 .then();
 
+        responseCompleted.assertThat().statusCode(200);
 
         // Faz a requisição GET e armazena a resposta
         ValidatableResponse response = requestSpecification
@@ -324,12 +325,12 @@ public class BooksControllerTest {
 
         ValidatableResponse responseCompleted = requestSpecification
                 .when()
-                .patch("http://localhost:" + port + "/ms/books/status/progress/" + idUser + "/" + books.getFirst())
+                .put("http://localhost:" + port + "/ms/books/status/progress/" + idUser + "/" + books.getFirst())
                 .then();
 
         ValidatableResponse responseCompleted1 = requestSpecification
                 .when()
-                .patch("http://localhost:" + port + "/ms/books/status/progress/" + idUser + "/" + books.get(books.size()-1))
+                .put("http://localhost:" + port + "/ms/books/status/progress/" + idUser + "/" + books.get(books.size()-1))
                 .then();
 
 
@@ -364,12 +365,12 @@ public class BooksControllerTest {
 
         ValidatableResponse responseCompleted = requestSpecification
                 .when()
-                .patch("http://localhost:" + port + "/ms/books/status/completed/" + idUser + "/" + books.getFirst())
+                .put("http://localhost:" + port + "/ms/books/status/completed/" + idUser + "/" + books.getFirst())
                 .then();
 
         ValidatableResponse responseCompleted1 = requestSpecification
                 .when()
-                .patch("http://localhost:" + port + "/ms/books/status/completed/" + idUser + "/" + books.get(books.size()-1))
+                .put("http://localhost:" + port + "/ms/books/status/completed/" + idUser + "/" + books.get(books.size()-1))
                 .then();
 
 
