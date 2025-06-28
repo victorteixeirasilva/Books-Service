@@ -1,17 +1,13 @@
 services:
-  config-service:
+  books-service:
     build:
       context: .
-    container_name: config-service
-    env_file:
-      - ../.env
-    # ports:
-    #   - "8099:8099"
-    ports:
-      - "127.0.0.1:8099:8099"
+    container_name: books-service
+#    ports:
+#      - "8091:8091"
     networks:
       - backend
 
 networks:
   backend:
-    driver: bridge
+    external: true
