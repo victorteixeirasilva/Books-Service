@@ -39,11 +39,16 @@ public class BooksController {
     @PostMapping("/{idUser}")
     public CompletableFuture<ResponseEntity<Book>> addBook(
             @PathVariable UUID idUser,
-            @RequestBody RequestBookDTO dto
+            @RequestBody RequestBookDTO dto,
+            HttpServletRequest request
     ) throws NotSavedDTOInDbException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.addBook(idUser, dto)
-        ));
+        if (tokenIsValid(request)) {
+            return CompletableFuture.completedFuture(ResponseEntity.ok(
+                    service.addBook(idUser, dto)
+            ));
+        } else {
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        }
     }
 
     @Operation(summary = "Editar Livro. | Edit Book.", description = "Retorna o Livro editado. | Returns the edited Book.")
@@ -52,11 +57,16 @@ public class BooksController {
     public CompletableFuture<ResponseEntity<Book>> updateBook(
             @PathVariable UUID idUser,
             @PathVariable UUID idBook,
-            @RequestBody RequestBookDTO dto
+            @RequestBody RequestBookDTO dto,
+            HttpServletRequest request
     ) throws UnauthorizedUserAboutBookException, BookNotFoundException, DataBaseException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.updateBook(idUser, idBook, dto)
-        ));
+        if (tokenIsValid(request)) {
+            return CompletableFuture.completedFuture(ResponseEntity.ok(
+                    service.updateBook(idUser, idBook, dto)
+            ));
+        } else {
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        }
     }
 
     @Operation(summary = "Mudar o Status para TODO | Change Status TODO", description = "Retorna o Livro editado. | Returns the edited Book.")
@@ -64,11 +74,16 @@ public class BooksController {
     @PutMapping("/status/todo/{idUser}/{idBook}")
     public CompletableFuture<ResponseEntity<Book>> updateBookStatusToDo(
             @PathVariable UUID idUser,
-            @PathVariable UUID idBook
+            @PathVariable UUID idBook,
+            HttpServletRequest request
     ) throws BookNotFoundException, DataBaseException, UnauthorizedUserAboutBookException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.updateBookStatus(idUser, idBook, Status.TO_DO)
-        ));
+        if (tokenIsValid(request)) {
+            return CompletableFuture.completedFuture(ResponseEntity.ok(
+                    service.updateBookStatus(idUser, idBook, Status.TO_DO)
+            ));
+        } else {
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        }
     }
 
     @Operation(summary = "Mudar o Status para IN PROGRESS | Change Status to IN PROGRESS", description = "Retorna o Livro editado. | Returns the edited Book.")
@@ -76,11 +91,16 @@ public class BooksController {
     @PutMapping("/status/progress/{idUser}/{idBook}")
     public CompletableFuture<ResponseEntity<Book>> updateBookStatusInProgress(
             @PathVariable UUID idUser,
-            @PathVariable UUID idBook
+            @PathVariable UUID idBook,
+            HttpServletRequest request
     ) throws BookNotFoundException, DataBaseException, UnauthorizedUserAboutBookException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.updateBookStatus(idUser, idBook, Status.IN_PROGRESS)
-        ));
+        if (tokenIsValid(request)) {
+            return CompletableFuture.completedFuture(ResponseEntity.ok(
+                    service.updateBookStatus(idUser, idBook, Status.IN_PROGRESS)
+            ));
+        } else {
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        }
     }
 
     @Operation(summary = "Mudar o Status para COMPLETED | Change Status to COMPLETED", description = "Retorna o Livro editado. | Returns the edited Book.")
@@ -88,11 +108,16 @@ public class BooksController {
     @PutMapping("/status/completed/{idUser}/{idBook}")
     public CompletableFuture<ResponseEntity<Book>> updateBookStatusCompleted(
             @PathVariable UUID idUser,
-            @PathVariable UUID idBook
+            @PathVariable UUID idBook,
+            HttpServletRequest request
     ) throws BookNotFoundException, DataBaseException, UnauthorizedUserAboutBookException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.updateBookStatus(idUser, idBook, Status.COMPLETED)
-        ));
+        if (tokenIsValid(request)) {
+            return CompletableFuture.completedFuture(ResponseEntity.ok(
+                    service.updateBookStatus(idUser, idBook, Status.COMPLETED)
+            ));
+        } else {
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        }
     }
 
     @Operation(summary = "Deletar Livro. | Delete Book.", description = "Retorna confirmação que o Livro foi deletado. | Returns confirmation that the Book has been deleted.")
@@ -100,11 +125,16 @@ public class BooksController {
     @DeleteMapping("/{idUser}/{idBook}")
     public CompletableFuture<ResponseEntity<ResponseDeleteBookDTO>> deleteBook(
             @PathVariable UUID idUser,
-            @PathVariable UUID idBook
+            @PathVariable UUID idBook,
+            HttpServletRequest request
     ) throws BookNotFoundException, DataBaseException, UnauthorizedUserAboutBookException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.deleteBook(idUser, idBook)
-        ));
+        if (tokenIsValid(request)) {
+            return CompletableFuture.completedFuture(ResponseEntity.ok(
+                    service.deleteBook(idUser, idBook)
+            ));
+        } else {
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        }
     }
 
     @Operation(summary = "Ver todos os Livros de um Usuário.", description = "Retorna uma lista com os Livros cadastrados.")
@@ -114,7 +144,7 @@ public class BooksController {
             @PathVariable UUID idUser,
             HttpServletRequest request
     ) throws BookNotFoundException, DataBaseException {
-        if (validaToken(request)) {
+        if (tokenIsValid(request)) {
             return CompletableFuture.completedFuture(ResponseEntity.ok(
                     service.getBooks(idUser)
             ));
@@ -127,33 +157,48 @@ public class BooksController {
     @Async("asyncExecutor")
     @GetMapping("/status/todo/{idUser}")
     public CompletableFuture<ResponseEntity<List<Book>>> getBooksToDo(
-            @PathVariable UUID idUser
+            @PathVariable UUID idUser,
+            HttpServletRequest request
     ) throws BookNotFoundException, DataBaseException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.getBooksStatus(idUser, Status.TO_DO)
-        ));
+        if (tokenIsValid(request)) {
+            return CompletableFuture.completedFuture(ResponseEntity.ok(
+                    service.getBooksStatus(idUser, Status.TO_DO)
+            ));
+        } else {
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        }
     }
 
     @Operation(summary = "Ver todos os Livros de um Usuário, com status IN PROGRESS.", description = "Retorna uma lista com os Livros cadastrados com status TODO.")
     @Async("asyncExecutor")
     @GetMapping("/status/progress/{idUser}")
     public CompletableFuture<ResponseEntity<List<Book>>> getBooksInProgress(
-            @PathVariable UUID idUser
+            @PathVariable UUID idUser,
+            HttpServletRequest request
     ) throws BookNotFoundException, DataBaseException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.getBooksStatus(idUser, Status.IN_PROGRESS)
-        ));
+        if (tokenIsValid(request)) {
+            return CompletableFuture.completedFuture(ResponseEntity.ok(
+                    service.getBooksStatus(idUser, Status.IN_PROGRESS)
+            ));
+        } else {
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        }
     }
 
     @Operation(summary = "Ver todos os Livros de um Usuário, com status COMPLETED.", description = "Retorna uma lista com os Livros cadastrados com status TODO.")
     @Async("asyncExecutor")
     @GetMapping("/status/completed/{idUser}")
     public CompletableFuture<ResponseEntity<List<Book>>> getBooksCompleted(
-            @PathVariable UUID idUser
+            @PathVariable UUID idUser,
+            HttpServletRequest request
     ) throws BookNotFoundException, DataBaseException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.getBooksStatus(idUser, Status.COMPLETED)
-        ));
+        if (tokenIsValid(request)) {
+            return CompletableFuture.completedFuture(ResponseEntity.ok(
+                    service.getBooksStatus(idUser, Status.COMPLETED)
+            ));
+        } else {
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        }
     }
 
     @Operation(summary = "Pegar Livro.", description = "Retorna o livro cadastrado.")
@@ -161,15 +206,26 @@ public class BooksController {
     @GetMapping("/{idUser}/{idBook}")
     public CompletableFuture<ResponseEntity<Book>> getBook(
             @PathVariable UUID idUser,
-            @PathVariable UUID idBook
+            @PathVariable UUID idBook,
+            HttpServletRequest request
     ) throws BookNotFoundException, DataBaseException, UnauthorizedUserAboutBookException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.getBook(idUser, idBook)
-        ));
+        if (tokenIsValid(request)){
+            return CompletableFuture.completedFuture(ResponseEntity.ok(
+                    service.getBook(idUser, idBook)
+            ));
+        } else {
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        }
     }
 
-    private boolean validaToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
+    private boolean tokenIsValid(HttpServletRequest request) {
+        String authHeader;
+
+        try {
+            authHeader = request.getHeader("Authorization");
+        } catch (Exception e) {
+            return false;
+        }
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7); // remove "Bearer "
