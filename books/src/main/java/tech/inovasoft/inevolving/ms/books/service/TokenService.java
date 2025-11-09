@@ -28,13 +28,13 @@ public class TokenService {
             return new TokenValidateResponse(
                     JWT.require(algorithm)
                             .withIssuer("AuthForMService")
-                            .withAudience("Books-Service")
+                            .withAudience("books-service")
                             .build()
                             .verify(token)
                             .getSubject(),
                     JWT.require(algorithm)
                             .withIssuer("AuthForMService")
-                            .withAudience("Books-Service")
+                            .withAudience("books-service")
                             .build()
                             .verify(token)
                             .getAudience().getFirst()
@@ -42,7 +42,7 @@ public class TokenService {
         } catch (IncorrectClaimException e) {
             throw new RuntimeException("Invalid token");
         } catch (JWTVerificationException e) {
-            return null;
+            throw new RuntimeException("Não foi Possivel identificar um token");
         }
     }
 
