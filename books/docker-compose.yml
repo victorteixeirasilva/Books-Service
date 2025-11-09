@@ -3,8 +3,8 @@ services:
     build:
       context: .
     container_name: books-service
-#    ports:
-#      - "8091:8091"
+    ports:
+      - "8091:8091"
     networks:
       - backend
 

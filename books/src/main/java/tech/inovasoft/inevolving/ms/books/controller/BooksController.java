@@ -2,7 +2,9 @@ package tech.inovasoft.inevolving.ms.books.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,7 @@ import tech.inovasoft.inevolving.ms.books.domain.exception.UnauthorizedUserAbout
 import tech.inovasoft.inevolving.ms.books.domain.model.Book;
 import tech.inovasoft.inevolving.ms.books.domain.model.Status;
 import tech.inovasoft.inevolving.ms.books.service.BooksService;
+import tech.inovasoft.inevolving.ms.books.service.TokenService;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +30,9 @@ public class BooksController {
 
     @Autowired
     private BooksService service;
+
+    @Autowired
+    private TokenService tokenService;
 
     @Operation(summary = "Adicionar um novo Livro na lista do Usuário. | Add a new Book to the User's list.", description = "Retorna o Livro cadastrado. | Returns the registered Book.")
     @Async("asyncExecutor")
@@ -105,11 +111,16 @@ public class BooksController {
     @Async("asyncExecutor")
     @GetMapping("/{idUser}")
     public CompletableFuture<ResponseEntity<List<Book>>> getBooks(
-            @PathVariable UUID idUser
+            @PathVariable UUID idUser,
+            HttpServletRequest request
     ) throws BookNotFoundException, DataBaseException {
-        return CompletableFuture.completedFuture(ResponseEntity.ok(
-                service.getBooks(idUser)
-        ));
+        if (validaToken(request)) {
+            return CompletableFuture.completedFuture(ResponseEntity.ok(
+                    service.getBooks(idUser)
+            ));
+        } else {
+            return CompletableFuture.completedFuture(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        }
     }
 
     @Operation(summary = "Ver todos os Livros de um Usuário, com status TO DO.", description = "Retorna uma lista com os Livros cadastrados com status TODO.")
@@ -155,5 +166,20 @@ public class BooksController {
         return CompletableFuture.completedFuture(ResponseEntity.ok(
                 service.getBook(idUser, idBook)
         ));
+    }
+
+    private boolean validaToken(HttpServletRequest request) {
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7); // remove "Bearer "
+
+            var validateToken = tokenService.validateToken(token);
+
+            return true;
+
+        } else {
+            return false;
+        }
     }
 }
