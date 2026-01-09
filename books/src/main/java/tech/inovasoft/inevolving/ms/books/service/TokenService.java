@@ -23,7 +23,6 @@ public class TokenService {
 
     public TokenValidateResponse validateToken(String token) {
         try {
-
             Algorithm algorithm = Algorithm.RSA256(publicKey);
             return new TokenValidateResponse(
                     JWT.require(algorithm)
