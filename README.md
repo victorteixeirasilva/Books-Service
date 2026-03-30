@@ -2,6 +2,8 @@
 
 **Sustentando seu fluxo de leitura do “quero ler” ao “já concluído” — com segurança, consistência e desempenho.**
 
+<img width="1536" height="1024" alt="Generatedimage_1774908429461" src="https://github.com/user-attachments/assets/f7121bf1-1367-402f-848d-7c1a01f00871" />
+
 ## 1. Título do Projeto
 Books-Service: Microserviço de Gestão de Livros com JWT, JPA e Swagger
 
